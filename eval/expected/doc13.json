@@ -1,0 +1,13 @@
+{
+  "jurisdiction": "Oregon",
+  "claims_made": [
+    "premiums are fixed for the life of the policy",
+    "benefits are never reduced"
+  ],
+  "prohibited_phrases": [
+    "everyone qualifies",
+    "guaranteed",
+    "cannot be denied"
+  ],
+  "risk_level": "high"
+}

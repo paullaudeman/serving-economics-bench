@@ -1,0 +1,13 @@
+{
+  "jurisdiction": "Pennsylvania",
+  "claims_made": [
+    "death benefit never decreases",
+    "cash value grows at a fixed 3 percent annual rate"
+  ],
+  "prohibited_phrases": [
+    "guaranteed",
+    "no risk",
+    "limited time"
+  ],
+  "risk_level": "high"
+}

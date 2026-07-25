@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "description": "Single source of truth for all pricing used by bench.py --estimate and analyze.py. Never hardcode prices in code.",
+    "units": "USD per 1,000,000 tokens (per MTok)",
+    "rule": "Anthropic first-party pricing and Amazon Bedrock pricing are SEPARATE price lists. Never mix them, never assume one from the other.",
+    "cache_semantics": "cache_write is the one-time premium for writing a cacheable prefix (5-minute TTL); cache_read is the discounted rate for tokens served from cache. Tokens reported in input_tokens exclude cache read/write tokens on both providers - verify against your first real invoice line items.",
+    "last_updated": "2026-07-25"
+  },
+  "anthropic": {
+    "source": "Anthropic first-party price list (platform.claude.com/docs/en/pricing), as cached 2026-06-24. Verify at https://platform.claude.com/docs/en/pricing before quoting numbers externally.",
+    "verified": true,
+    "models": {
+      "haiku": {
+        "model_id": "claude-haiku-4-5",
+        "input_per_mtok": 1.0,
+        "output_per_mtok": 5.0,
+        "cache_write_per_mtok": 1.25,
+        "cache_read_per_mtok": 0.1
+      },
+      "sonnet": {
+        "model_id": "claude-sonnet-4-6",
+        "input_per_mtok": 3.0,
+        "output_per_mtok": 15.0,
+        "cache_write_per_mtok": 3.75,
+        "cache_read_per_mtok": 0.3
+      },
+      "opus": {
+        "model_id": "claude-opus-4-8",
+        "input_per_mtok": 5.0,
+        "output_per_mtok": 25.0,
+        "cache_write_per_mtok": 6.25,
+        "cache_read_per_mtok": 0.5
+      }
+    }
+  },
+  "bedrock": {
+    "source": "AWS Price List API (pricing.us-east-1.amazonaws.com, offer AmazonBedrockFoundationModels, us-east-1), pulled 2026-07-25. Values are the REGIONAL (geo, us.* inference profile) on-demand tier - the tier bench.py's us.anthropic.* model IDs bill against. NOTE: Bedrock GLOBAL-routing tier prices are exactly Anthropic first-party parity; the regional tier carries a uniform 10% premium. Cache-write values are the 5-minute-TTL tier (1h tier priced separately, not used).",
+    "verified": true,
+    "models": {
+      "haiku": {
+        "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "input_per_mtok": 1.1,
+        "output_per_mtok": 5.5,
+        "cache_write_per_mtok": 1.375,
+        "cache_read_per_mtok": 0.11
+      },
+      "sonnet": {
+        "model_id": "us.anthropic.claude-sonnet-4-6",
+        "input_per_mtok": 3.3,
+        "output_per_mtok": 16.5,
+        "cache_write_per_mtok": 4.125,
+        "cache_read_per_mtok": 0.33
+      },
+      "opus": {
+        "model_id": "us.anthropic.claude-opus-4-8",
+        "input_per_mtok": 5.5,
+        "output_per_mtok": 27.5,
+        "cache_write_per_mtok": 6.875,
+        "cache_read_per_mtok": 0.55
+      }
+    }
+  }
+}

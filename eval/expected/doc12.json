@@ -1,0 +1,11 @@
+{
+  "jurisdiction": "Michigan",
+  "claims_made": [
+    "benefit amounts from $5,000 to $40,000",
+    "full refund within the first 30 days"
+  ],
+  "prohibited_phrases": [
+    "risk-free"
+  ],
+  "risk_level": "medium"
+}

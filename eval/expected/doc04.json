@@ -1,0 +1,14 @@
+{
+  "jurisdiction": "Florida",
+  "claims_made": [
+    "coverage up to $30,000",
+    "benefits are paid directly to your beneficiary within 48 hours"
+  ],
+  "prohibited_phrases": [
+    "cannot be denied",
+    "no medical exam ever",
+    "guaranteed",
+    "act now"
+  ],
+  "risk_level": "high"
+}

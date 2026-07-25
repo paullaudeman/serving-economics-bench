@@ -1,0 +1,27 @@
+# Generated run artifacts - results are dated snapshots, the harness is the asset
+results.jsonl
+results.md
+chart.png
+results-ec2/
+
+# Personal / local-only files - never tracked
+local.mk
+claims-personal.md
+exploration-journal.md
+linkedin-post-notes.md
+drafts/
+
+# Python
+__pycache__/
+.venv/
+
+# Terraform (terraform/.gitignore also covers state inside that directory)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+*.tfvars
+*.tfvars.json
+
+# OS
+.DS_Store

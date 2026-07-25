@@ -1,0 +1,11 @@
+# Local state for a weekend rig - never commit state (it can carry resource
+# attributes you don't want published). The lock file IS committed.
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+plan.out

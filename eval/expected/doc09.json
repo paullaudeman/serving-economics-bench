@@ -1,0 +1,11 @@
+{
+  "jurisdiction": "Illinois",
+  "claims_made": [
+    "children and grandchildren can be added for $1 per month",
+    "claims are paid in an average of five business days"
+  ],
+  "prohibited_phrases": [
+    "act now"
+  ],
+  "risk_level": "medium"
+}

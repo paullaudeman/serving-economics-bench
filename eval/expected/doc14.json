@@ -1,0 +1,11 @@
+{
+  "jurisdiction": "unspecified",
+  "claims_made": [
+    "pays a cash benefit of $150 per day",
+    "benefits are paid regardless of what your other plans pay"
+  ],
+  "prohibited_phrases": [
+    "limited time"
+  ],
+  "risk_level": "medium"
+}

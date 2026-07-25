@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serving Economics - Why This Benchmark Exists</title>
+<style>
+:root{--bg:#fcfcfb;--card:#ffffff;--ink:#333333;--ink2:#555555;--muted:#999999;
+--navy:#1F3A5F;--teal:#0d81a6;--amber:#bd6c10;--line:#e4e2dc;--wash:#f4f3ef}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,'Helvetica Neue','Segoe UI',sans-serif;max-width:920px;margin:0 auto;padding:52px 30px 110px}
+h1{color:var(--navy);font-size:1.85em;line-height:1.2;margin-bottom:10px}
+h2{color:var(--navy);font-size:1.25em;margin:52px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+h3{color:var(--ink);font-size:1em;margin:16px 0 6px}
+p{margin-bottom:12px}
+.sub{color:var(--ink2);font-size:1.02em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:16px 0;box-shadow:0 1px 3px rgba(31,58,95,.05)}
+.wash{background:var(--wash);border:none}
+.badge{display:inline-block;background:#eef6ee;color:#3d6b3d;border:1px solid #cfe3cf;border-radius:20px;padding:3px 14px;font-size:.82em;font-weight:600;margin-bottom:18px}
+.note{color:var(--muted);font-size:.85em}
+.illu{display:inline-block;background:#fdf3e4;color:var(--amber);border:1px solid #eeddc0;border-radius:6px;padding:1px 8px;font-size:.72em;font-weight:700;letter-spacing:.05em;vertical-align:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;cursor:pointer;transition:border-color .15s}
+.q:hover{border-color:var(--teal)}
+.q .head{font-weight:700;color:var(--navy)}
+.q .body{display:none;color:var(--ink2);font-size:.93em;margin-top:8px}
+.q.open .body{display:block}
+.q .tip{color:var(--muted);font-size:.78em;margin-top:6px}
+.q.open .tip{display:none}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.readout{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.stat{flex:1;min-width:130px;background:var(--wash);border-radius:10px;padding:10px 14px;text-align:center}
+.stat .v{font-size:1.25em;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.stat .l{font-size:.75em;color:var(--ink2)}
+.mech{border-left:4px solid var(--teal);background:var(--card);border-radius:0 10px 10px 0;padding:14px 18px;margin:12px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mech b{color:var(--navy)}
+svg text{font-family:inherit}
+.footer{color:var(--muted);font-size:.82em;border-top:1px solid var(--line);padding-top:18px;margin-top:56px}
+.bridge{background:var(--navy);color:#f0f2f5;border-radius:12px;padding:20px 24px;margin:16px 0;font-size:1.05em}
+.bridge em{color:#bcd0e6}
+.notlist li{margin:4px 0;color:var(--ink2)}
+ul{padding-left:22px}
+</style>
+</head>
+<body>
+
+<div class="badge">Status: REAL RUN COMPLETE - 25. Jul 2026 - 210 measurements across 14 cells (Haiku and Sonnet, both doors), about $4.30 API spend, rig destroyed same day</div>
+<h1>Serving Economics, Measured Small</h1>
+<p class="sub">Why a $6 Saturday benchmark exists, what questions it answers, and what it buys. Every number on this page is <span class="illu">ILLUSTRATIVE</span> until the real run replaces it.</p>
+
+<h2>1 · The triangle the whole job lives in</h2>
+<p>AWS serves frontier models to customers. Every conversation about serving them eventually reduces to three quantities in tension. <b>Drag the dot</b> - the closer you sit to a corner, the more of that quality you're buying, paid for by the other two. <span class="illu">ILLUSTRATIVE</span></p>
+<div class="card" style="text-align:center">
+<svg id="tri" viewBox="0 0 460 250" style="max-width:460px;width:100%;touch-action:none;cursor:grab">
+  <polygon points="230,38 60,210 400,210" fill="#f4f3ef" stroke="#1F3A5F" stroke-width="2"/>
+  <circle id="g-lat" cx="230" cy="38" r="20" fill="#0d81a6" opacity=".15"/>
+  <circle id="g-thr" cx="60" cy="210" r="20" fill="#0d81a6" opacity=".15"/>
+  <circle id="g-cost" cx="400" cy="210" r="20" fill="#bd6c10" opacity=".15"/>
+  <circle cx="230" cy="38" r="6" fill="#0d81a6"/>
+  <circle cx="60" cy="210" r="6" fill="#0d81a6"/>
+  <circle cx="400" cy="210" r="6" fill="#bd6c10"/>
+  <text x="230" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1F3A5F">Fast answers</text>
+  <text x="60" y="238" text-anchor="middle" font-size="13" font-weight="700" fill="#1F3A5F">High volume</text>
+  <text x="400" y="238" text-anchor="middle" font-size="13" font-weight="700" fill="#1F3A5F">Low cost</text>
+  <circle id="tridot" cx="230" cy="152" r="10" fill="#1F3A5F" stroke="#fff" stroke-width="2.5" style="cursor:grab"/>
+</svg>
+<div class="readout">
+  <div class="stat"><div class="v" id="t-lat">-</div><div class="l">latency per answer</div></div>
+  <div class="stat"><div class="v" id="t-thr">-</div><div class="l">tokens / second</div></div>
+  <div class="stat"><div class="v" id="t-cost">-</div><div class="l">$ / completed task</div></div>
+</div>
+<p id="tri-text" class="sub" style="min-height:52px;margin-top:10px"></p>
+<div id="tri-narrate" style="display:none;text-align:left;background:var(--wash);border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:14px 18px;margin-top:8px;font-size:.93em;opacity:0;transition:opacity .5s"></div>
+</div>
+
+<h2>2 · The trade-off, live: batch size</h2>
+<p>Serving systems answer many requests at once ("batching"). More batching = each answer waits a little longer, but the machine does far more total work - so each task gets cheaper. Drag the slider. <span class="illu">ILLUSTRATIVE CURVE</span></p>
+<div class="card">
+  <svg id="curve" viewBox="0 0 480 230" style="width:100%;max-width:560px;display:block;margin:0 auto">
+    <line x1="50" y1="190" x2="460" y2="190" stroke="#e4e2dc" stroke-width="1.5"/>
+    <line x1="50" y1="190" x2="50" y2="20" stroke="#e4e2dc" stroke-width="1.5"/>
+    <text x="255" y="215" text-anchor="middle" font-size="12" fill="#555">time until an answer completes (s)</text>
+    <text x="18" y="105" text-anchor="middle" font-size="12" fill="#555" transform="rotate(-90 18 105)">work done per second</text>
+    <path id="curvepath" fill="none" stroke="#0d81a6" stroke-width="2.5"/>
+    <circle id="dot" r="7" fill="#bd6c10" stroke="#fff" stroke-width="2"/>
+    <text id="dotlabel" font-size="12" font-weight="700" fill="#bd6c10"></text>
+  </svg>
+  <label for="batch" style="display:block;margin-top:8px;color:var(--ink2);font-size:.88em">batch size: <b id="bval" style="color:var(--navy)">8</b></label>
+  <input type="range" id="batch" min="0" max="5" step="1" value="3">
+  <div class="readout">
+    <div class="stat"><div class="v" id="r-lat">-</div><div class="l">latency per answer</div></div>
+    <div class="stat"><div class="v" id="r-thr">-</div><div class="l">tokens / second</div></div>
+    <div class="stat"><div class="v" id="r-cost">-</div><div class="l">cost per completed task</div></div>
+  </div>
+  <p class="note" id="curve-verdict" style="margin-top:10px"></p>
+  <div id="batch-narrate" style="display:none;text-align:left;background:var(--wash);border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:14px 18px;margin-top:8px;font-size:.93em;opacity:0;transition:opacity .5s"></div>
+</div>
+
+<h2>3 · Same model, two doors</h2>
+<p>Claude is served two ways: through <b style="color:var(--teal)">Amazon Bedrock</b> (AWS's door) and through <b style="color:var(--amber)">Anthropic's own API</b> (the first-party door). Same model class, different serving stacks, different pricing, potentially different latency behavior.</p>
+<div class="card" style="text-align:center">
+<svg viewBox="0 0 520 190" style="max-width:520px;width:100%">
+  <rect x="195" y="20" width="130" height="44" rx="10" fill="#f4f3ef" stroke="#1F3A5F" stroke-width="1.5"/>
+  <text x="260" y="47" text-anchor="middle" font-size="13" font-weight="700" fill="#1F3A5F">the same model</text>
+  <path d="M225 64 C 180 100, 150 110, 130 138" fill="none" stroke="#0d81a6" stroke-width="2.5"/>
+  <path d="M295 64 C 340 100, 370 110, 390 138" fill="none" stroke="#bd6c10" stroke-width="2.5"/>
+  <rect x="45" y="138" width="170" height="38" rx="9" fill="#0d81a6" opacity=".1" stroke="#0d81a6"/>
+  <text x="130" y="162" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0d81a6">Bedrock (AWS door)</text>
+  <rect x="305" y="138" width="170" height="38" rx="9" fill="#bd6c10" opacity=".1" stroke="#bd6c10"/>
+  <text x="390" y="162" text-anchor="middle" font-size="12.5" font-weight="700" fill="#bd6c10">Anthropic first-party</text>
+  <text x="260" y="128" text-anchor="middle" font-size="12" fill="#999">the DELTA between the doors</text>
+  <text x="260" y="112" text-anchor="middle" font-size="15">&#916;</text>
+</svg>
+<p class="sub" style="margin-top:8px">The benchmark runs the identical task through both doors and measures the delta. That gap - how first-party serving and Bedrock serving differ, and what to do about it - is a real co-development question in this industry, in miniature.</p>
+</div>
+
+<div class="card">
+<h3 style="color:var(--navy);margin-top:0;font-size:1.15em">Wait - does AWS actually HAVE the model?</h3>
+<p>A common assumption: Bedrock is a <b>broker</b> - AWS forwards your request to Anthropic's API and wraps AWS features around the response. <b>That is not how it works.</b> Bedrock is a <b>host</b>: under the partnership, the model provider delivers the model itself - the weights - and AWS runs its own serving of it on AWS-operated infrastructure. Your request never leaves the AWS envelope and never touches the provider's servers. That's the entire basis of Bedrock's documented security position (prompts and completions are not shared with the model provider, and customers never see the weights) - and it's the only reason the ledger-2 data boundary exists at all. A broker couldn't promise it.</p>
+<p><b>What "having the model" physically looks like:</b></p>
+<ul class="notlist">
+<li><b>At rest:</b> weight files - encrypted artifacts in storage, delivered under the commercial agreement, handled under controls that keep them from customers and casual staff alike. (So the "it's a file in S3 somewhere" instinct is directionally right - for storage.)</li>
+<li><b>At serving time, the file picture breaks:</b> generating each token touches essentially all of the weights, so the model must sit resident in accelerator memory. No single chip holds a frontier model (an H100-class GPU carries 80GB of HBM), so the weights are <b>sharded across many accelerators</b> with fast interconnect, acting as one logical machine - plus the KV cache for every in-flight conversation. A production "copy of Claude" is a fleet formation kept hot around the clock, with routing spreading requests across many such formations.</li>
+<li><b>How big is Claude?</b> Not public - Anthropic doesn't publish parameter counts. For scale intuition only: open-weight models run about 140GB at 70B parameters and about 800GB at 405B; frontier closed models are widely assumed to be in that class or beyond. Calibration, not a claim.</li>
+</ul>
+<p style="background:var(--wash);border-radius:8px;padding:10px 14px">The consequence that powers this whole page: because AWS hosts its own serving stack for the same model the provider serves first-party, <b>two independent engineering implementations of "serve this model fast and cheap" exist</b> - same weights, different fleets, batching, routing, and caching machinery. That is why a measurable delta can exist at all, and why the bridge between the two stacks is real engineering rather than API reselling.</p>
+</div>
+
+<div class="card">
+<h3 style="color:var(--navy);margin-top:0;font-size:1.15em">Why not just go first-party?</h3>
+<p>Because for most enterprises the choice was never about the model - it's about everything wrapped around it:</p>
+<ul class="notlist">
+<li><b>Procurement gravity.</b> Bedrock rides the existing AWS bill and enterprise agreement - committed AWS spend draws down against it. First-party means onboarding a new vendor: security review, legal, a second invoice. For a Fortune 500, that alone decides quarters.</li>
+<li><b>The data boundary.</b> Through Bedrock, traffic stays inside the AWS envelope - private endpoints, no egress to a third party, and the compliance certifications (HIPAA, FedRAMP-class postures) inherit from AWS. A regulated carrier does not ship policyholder data to a new endpoint because the model is nice.</li>
+<li><b>One governance surface.</b> Same IAM, same audit trail, same guardrails as the rest of the estate. The AI workload becomes governable like everything else - not a special snowflake with its own key management.</li>
+<li><b>Model optionality.</b> One API across many providers' models - swap without re-integration.</li>
+</ul>
+<p>And the honest other side: <b>first-party usually gets the newest models and features first</b>, and a startup with no AWS gravity has little reason to route through the extra layer. Which sets up the real question:</p>
+<div class="tscroll" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.88em;margin:10px 0">
+<tr><th style="text-align:left;padding:7px 10px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">Ledger</th><th style="text-align:left;padding:7px 10px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">What's on it</th><th style="text-align:left;padding:7px 10px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">How it's evaluated</th></tr>
+<tr><td style="padding:7px 10px;border:1px solid var(--line)"><b>1 · Serving delta</b></td><td style="padding:7px 10px;border:1px solid var(--line)">Latency, effective cost, feature lag, operational behavior</td><td style="padding:7px 10px;border:1px solid var(--line)"><b>Measured</b> - this benchmark, per workload</td></tr>
+<tr><td style="padding:7px 10px;border:1px solid var(--line)"><b>2 · Enterprise wrapper</b></td><td style="padding:7px 10px;border:1px solid var(--line)">Procurement, IAM + governance, data boundary, compliance inheritance, vendor burden</td><td style="padding:7px 10px;border:1px solid var(--line)"><b>Assessed</b> - org structure and risk posture, not a script</td></tr>
+</table></div>
+<p style="background:var(--wash);border-radius:8px;padding:10px 14px"><b>If the enterprise reasons all push toward Bedrock, the only thing that pushes back is the delta</b> - and the delta is not a fixed "Bedrock tax." It is a vector: latency, effective cost (caching, batching, throughput options - not sticker price), feature lag, and operational behavior. <b>The sign of each component is an empirical question per workload</b> - which is the entire reason to measure rather than assume. Small delta: the enterprise forces make Bedrock the default winner. Large delta somewhere: that component is exactly what gets carried back into the Bedrock roadmap. <span style="color:var(--muted)">Shrinking that delta is, almost verbatim, the co-development job.</span></p>
+</div>
+
+<h2>4 · The four questions it answers</h2>
+<div class="grid2">
+  <div class="q"><div class="head">1 · What does one COMPLETED task cost?</div><div class="tip">click to expand</div><div class="body">Not the per-token sticker price. A real task fails sometimes - malformed output, a retry, a second attempt. Cost per completed task prices the failures in. A cheap model that needs three tries is not cheap. This is the number a customer's CFO and AWS's revenue team both actually care about.</div></div>
+  <div class="q"><div class="head">2 · Where does the speed/volume curve bend?</div><div class="tip">click to expand</div><div class="body">Section 2's slider, measured for real. Interactive workloads sit near the fast end; batch workloads sit near the cheap end. Knowing where the bend is - for a specific task, on a specific tier - is the difference between an opinion and a recommendation.</div></div>
+  <div class="q"><div class="head">3 · What does caching actually buy?</div><div class="tip">click to expand</div><div class="body">Prompt caching can cut input cost dramatically - but only when the repeated part of the prompt is big enough to cache at all (both providers have minimum cacheable sizes). The benchmark measures the win where it exists and documents where it silently does nothing.</div></div>
+  <div class="q"><div class="head">4 · What's the delta between the two doors?</div><div class="tip">click to expand</div><div class="body">Same model, same documents, Bedrock vs first-party: latency shape, token accounting, cost. Measured honestly at small scale - then it becomes an informed question to people who see it at large scale.</div></div>
+</div>
+
+<h2>4b · What we actually ask the models - task design decides everything</h2>
+<div class="card">
+<p>Two tempting task shapes, both wrong in opposite ways:</p>
+<ul class="notlist">
+<li><b>"Is the sky blue?"</b> - every tier nails it (zero discrimination), a three-token answer is all fixed overhead (nothing to time), nothing can fail (no retry economics), and nobody's enterprise bill is trivia. Measures nothing.</li>
+<li><b>"Explain why the sky is blue"</b> - unscoreable without an LLM judge (a second model's opinion inside your metrics), and output length varies wildly across tiers, so cost comparisons stop being apples-to-apples. Pass/fail undefined - which kills the completed-task unit.</li>
+</ul>
+<p><b>The shape that works:</b> structured extraction against a known answer key. Each model reads a synthetic insurance mailer and returns a fixed JSON schema - jurisdiction, claims made, prohibited phrases, derived risk level - scored pass/fail by machine:</p>
+<pre style="background:var(--wash);border-radius:8px;padding:12px 16px;font-size:.8em;overflow-x:auto;line-height:1.5">GRANITE PEAK MUTUAL - Whole Life Protection for California Families
+"...Once you enroll, your monthly rate is locked in for life..."
+"...Approval is guaranteed for applicants aged 45 to 80... Act now..."
+
+  expected -> { "jurisdiction": "California",
+                "claims_made": ["coverage amounts up to $50,000", ...],
+                "prohibited_phrases": ["guaranteed", "act now"],
+                "risk_level": "medium" }</pre>
+<p>Why this shape passes the four criteria a benchmark task must meet:</p>
+<ul class="notlist">
+<li><b>Representative</b> - compliance extraction is a real enterprise workload class, not a synthetic puzzle.</li>
+<li><b>Objectively scorable</b> - valid JSON + fields match = pass. No judge model, no opinion in the loop.</li>
+<li><b>Discriminative</b> - a small model can plausibly miss a phrase or derive the wrong tier; a large one should ace it. The tiers can separate - exactly what H1 bets on.</li>
+<li><b>Bounded output</b> - the schema caps response length, keeping cost comparisons honest across models.</li>
+</ul>
+<p style="background:var(--wash);border-radius:8px;padding:10px 14px">And the property the sky questions can't have: <b>a real failure mode.</b> Malformed output triggers a retry, the retry gets priced, and controllability - the fifth axis - becomes a number instead of a vibe. One deliberate limit: it's ONE task. The method generalizes to any task you can score; the findings don't generalize past the task. That boundary ships with every claim.</p>
+</div>
+
+<h2>5 · Why "per completed task" changes the answer</h2>
+<p>Slide the failure rate of the cheaper model. Watch when "cheap" stops being cheap. <span class="illu">ILLUSTRATIVE PRICES</span></p>
+<div class="card">
+  <div class="grid2">
+    <div>
+      <h3 style="color:var(--teal)">Model A - cheaper, flakier</h3>
+      <p class="note">$0.004 per attempt · failure rate <b id="fval" style="color:var(--navy)">15%</b></p>
+      <input type="range" id="fail" min="0" max="45" step="1" value="15">
+      <div class="stat" style="margin-top:8px"><div class="v" id="a-eff">-</div><div class="l">effective $ / completed task</div></div>
+    </div>
+    <div>
+      <h3 style="color:var(--amber)">Model B - pricier, reliable</h3>
+      <p class="note">$0.0065 per attempt · failure rate 2% (fixed)</p>
+      <div style="height:29px"></div>
+      <div class="stat" style="margin-top:8px"><div class="v">$0.0066</div><div class="l">effective $ / completed task</div></div>
+    </div>
+  </div>
+  <p id="fail-verdict" style="margin-top:12px;font-weight:600;color:var(--navy)"></p>
+  <div id="fail-narrate" style="display:none;text-align:left;background:var(--wash);border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:14px 18px;margin-top:8px;font-size:.93em;opacity:0;transition:opacity .5s"></div>
+</div>
+
+<h2>6 · Why a practitioner builds this</h2>
+<div class="mech"><b>Receipts beat claims.</b> Anyone can assert an opinion about serving trade-offs. A repo with a measured curve is a receipt - demonstrable, rerunnable, and open to inspection. The difference between "I believe caching helps" and "here is the cell where it helped, and the cell where it silently did nothing" is the difference between an opinion and a finding.</div>
+<div class="mech"><b>Evidence converts "I learn fast" from promise to record.</b> Everyone says they ramp quickly on new domains. "I ran a provider-comparative serving benchmark last month - here's the cost-per-task spread, and here's what surprised me" is a different species of statement: a dated artifact with numbers attached, not a self-assessment.</div>
+<div class="mech"><b>Data flips conversations from defending gaps to asking informed questions.</b> Armed with even small-N numbers, the register changes: "I measured this delta between the doors at tiny scale - is that the shape you see at production scale?" That is not someone covering an inexperience gap. That is a practitioner opening a conversation worth having.</div>
+
+<h2>7 · The bridge</h2>
+<div class="bridge">Same discipline as a 7M-subscriber migration: <em>find the ceiling, measure the real throughput, derive the curve, let the data make the argument.</em> Pointed at tokens instead of subscribers. The benchmark does not just close a knowledge gap - it demonstrates that the measurement method transfers across domains.</div>
+
+<h2>8 · What this is - and is not</h2>
+<div class="card wash">
+<div class="grid2">
+<div><h3 style="color:#3d6b3d">It IS</h3><ul class="notlist"><li>a method demonstration at small N</li><li>real measurements on hosted APIs</li><li>cost per completed task, retries priced in</li><li>a generated curve, owned end to end</li></ul></div>
+<div><h3 style="color:#a04b4b">It is NOT</h3><ul class="notlist"><li>fleet-scale serving</li><li>production load testing</li><li>accelerator / Neuron work</li><li>anything to overclaim - the boundary is part of the artifact</li></ul></div>
+</div>
+</div>
+
+<h2>9 · Let's explore this - the pre-registration</h2>
+<p>Predictions written down <b>before</b> the run, on purpose. After Saturday, each verdict badge flips to held / flipped / taught-us-something - and the misses will be more valuable than the hits.</p>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--navy)">The plan - and the roads not taken</h3>
+<p>Chosen: a provider-comparative hosted-API benchmark. Two Claude tiers x two context lengths x cache on/off x two doors, plus one concurrency probe, 15 requests per cell, one real structured-extraction task, pass/fail scored. Considered and set aside, each for a reason worth recording:</p>
+<div class="tscroll" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.88em;margin:8px 0">
+<tr><th style="text-align:left;padding:7px 10px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">Alternative</th><th style="text-align:left;padding:7px 10px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">Why not (this weekend)</th></tr>
+<tr><td style="padding:7px 10px;border:1px solid var(--line)"><b>Self-hosted on Inferentia2 + Neuron/vLLM</b></td><td style="padding:7px 10px;border:1px solid var(--line)">The stronger hardware story - and the riskier first build: instance quotas, Neuron compilation, unfamiliar stack. A stalled build produces nothing; a finished hosted-API run produces a curve. Deferred as the stretch goal, not abandoned.</td></tr>
+<tr><td style="padding:7px 10px;border:1px solid var(--line)"><b>Cross-provider shootout (Claude vs GPT vs Gemini)</b></td><td style="padding:7px 10px;border:1px solid var(--line)">Punchier headline, weaker method - it confounds capability, price, API behavior, and serving stack in one comparison. Tiers within one family isolate the axis that actually drives spend decisions.</td></tr>
+<tr><td style="padding:7px 10px;border:1px solid var(--line)"><b>Single door (Anthropic only)</b></td><td style="padding:7px 10px;border:1px solid var(--line)">Cheapest and simplest - but it deletes the delta, which is the most decision-relevant measurement in the whole matrix.</td></tr>
+<tr><td style="padding:7px 10px;border:1px solid var(--line)"><b>Load / stress testing</b></td><td style="padding:7px 10px;border:1px solid var(--line)">Wrong tool at this scale and inappropriate against hosted APIs - and it would imply fleet conclusions the data could not support.</td></tr>
+</table></div>
+<p class="note">Anticipated cost: about $2.63 Anthropic side (computed from the matrix), Bedrock in the same neighborhood once real prices are filled - about $5-6 total. Time: one afternoon.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--navy)">Five hypotheses, on the record</h3>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="border:1px solid var(--line);border-radius:10px;padding:12px 16px"><b style="color:var(--navy)">H1 - Haiku wins the task.</b> On a well-specified extraction task, the small model's pass rate will be high enough that it wins cost-per-completed-task decisively - the tiered-routing thesis, quantified. <span class="illu" style="background:#e8f2e8;color:#3d6b3d;border-color:#cfe3cf">VERDICT: HELD, WITH THE LESSON BUILT IN</span> - Haiku stayed cheapest per completed task ($0.034 vs $0.045 short-context), but at a 72% pooled pass rate vs Sonnet's 98%. Retries shrank a 3x sticker advantage to ~1.3x effective, and 28% of tasks never completed. The cheap model wins only inside an escalation pattern. Failure mode: instruction literalism - it inferred "limited time" from "closes March 31."<br><span class="note">If it flips: the crossover widget in section 5 comes alive with real numbers - "cheap lost" is the more interesting story.</span></div>
+<div style="border:1px solid var(--line);border-radius:10px;padding:12px 16px"><b style="color:var(--navy)">H2 - Caching pays large where it applies.</b> On long context, cached reads cut effective input cost several-fold. The interesting finding won't be that it works - it's mapping precisely where it silently does nothing. <span class="illu" style="background:#e8f2e8;color:#3d6b3d;border-color:#cfe3cf">VERDICT: HELD, EMPHATICALLY</span> - about 5x cheaper per completed task on long context, consistent across every tier and both doors. The largest single lever in the dataset.<br><span class="note">If it flips: that's a token-accounting finding, and a better lesson than the expected one.</span></div>
+<div style="border:1px solid var(--line);border-radius:10px;padding:12px 16px"><b style="color:var(--navy)">H3 - The doors are near cost-parity; the latency delta has a sign we do NOT predict.</b> Sticker prices sit close; the honest pre-registration is that we genuinely don't know which door answers faster for this workload - writing that down now is the point. <span class="illu" style="background:#e8f2e8;color:#3d6b3d;border-color:#cfe3cf">VERDICT: RESOLVED IN TWO PARTS</span> - Cost: the +10% regional premium held, EXCEPT Sonnet long-context where Bedrock landed 13% cheaper per completed task (completion rates can invert a sticker gap). Latency: first-party mostly answers first (TTFT +24-54% via Bedrock) except Sonnet short (-17%); the sign is workload-dependent, as refused-to-predict.<br><span class="note">Integrity note, 25. Jul: the cost half was answered by the AWS Price List API before any request ran - Bedrock's global-routing tier is exact first-party parity, while the regional (us.*) tier we bill against carries a uniform 10% premium across all tiers and cache rates. Recorded here so the pre-registration stays honest about what was known when. The latency half remains genuinely blind.</span></div>
+<div style="border:1px solid var(--line);border-radius:10px;padding:12px 16px"><b style="color:var(--navy)">H4 - TTFT varies across doors more than inter-token latency does.</b> Queueing and routing differ between the doors more than generation speed should - the wait to start, not the speed once started, is where the doors diverge. <span class="illu" style="background:#fdf3e4;color:#bd6c10;border-color:#eeddc0">VERDICT: THE METRIC ITSELF FLIPPED</span> - the ITL comparison proved invalid across doors: it times stream EVENTS, and the doors chunk differently (first-party sends fewer, fatter deltas). Trap corner 8, realized. The trustworthy signal, wall clock, split beautifully: on Sonnet long-context, first-party starts sooner (1.15s vs 1.48s TTFT) but Bedrock finishes sooner (2.1s vs 2.8s total). The two doors optimize different halves of the same request.<br><span class="note">If it flips: something deeper differs in the serving path - worth a careful look before saying anything about it.</span></div>
+<div style="border:1px solid var(--line);border-radius:10px;padding:12px 16px"><b style="color:var(--navy)">H5 - Concurrency 4 shows no visible bend.</b> Hosted fleets absorb four parallel requests trivially; per-request latency degrades only modestly and goodput rises near-linearly. Predicting the flat result now prevents over-reading it later. <span class="illu" style="background:#e8f2e8;color:#3d6b3d;border-color:#cfe3cf">VERDICT: HELD FLAT</span> - c1 to c4: 1.15s to 1.14s first-party, 1.48s to 1.57s Bedrock. The hosted fleets shrugged.<br><span class="note">If it flips: rate limiting or queueing is visible even at toy scale - a real operational-behavior data point.</span></div>
+</div>
+</div>
+
+<div class="card wash">
+<h3 style="margin-top:0;color:var(--navy)">What we'll do with what we find</h3>
+<p>The discussion, pre-committed - so the data can't be spun after the fact:</p>
+<ul class="notlist">
+<li><b>Predictions vs actuals becomes the deliverable.</b> A five-row table - held / flipped / inconclusive - is the spine of the writeup. Misses get equal billing with hits; that's the register the whole project runs on.</li>
+<li><b>One genuine surprise gets the deep-dive.</b> Whichever hypothesis breaks most interestingly earns the follow-up paragraph: what we expected, what we saw, the most plausible mechanism, and what we would measure next to confirm it.</li>
+<li><b>No conclusion outruns the N.</b> Every claim ships with its boundary attached: one task, small N, hosted APIs, a snapshot in time. The findings are directional instruments, not verdicts.</li>
+<li><b>The verdict badges above flip in place</b> - this page is the lab notebook, and the pre-registration stays visible next to the results. That contrast IS the credibility.</li>
+</ul>
+</div>
+
+<h2>10 · FAQ - questions that should occur to you</h2>
+<div style="display:flex;flex-direction:column;gap:12px">
+
+<div class="q"><div class="head">Is "the delta" just the overhead cost of serving off Bedrock vs first-party?</div><div class="tip">click to expand</div><div class="body"><p>No - and the distinction matters, because the full decision runs on <b>two ledgers</b>:</p>
+<p><b>Ledger 1 - the measurable serving delta (what this benchmark prices):</b> latency (either direction - region and load dependent), effective cost (sticker prices are often near parity; the divergence lives in caching support, batch options, provisioned throughput), feature lag (newest capabilities usually land first-party first), and operational behavior (quotas, throttling, token accounting). The sign of each component is an empirical question per workload.</p>
+<p><b>Ledger 2 - the enterprise wrapper (what no script can measure, and what often decides):</b> procurement gravity, IAM and governance integration, the data boundary, compliance inheritance, vendor-management burden. For an AWS-native enterprise this ledger mostly points one way - toward Bedrock - because the first-party door is the one carrying "overhead" here: a second vendor, a second governance surface, data leaving the envelope.</p>
+<p>The two ledgers trade against each other, and that IS the decision: <b>the benchmark prices ledger 1 precisely so an organization knows what ledger 2's convenience costs - or saves - for their workload.</b> Asserting "Bedrock has overhead" without separating the ledgers is exactly the kind of claim this project exists to replace.</p></div></div>
+
+<div class="q"><div class="head">Why three tiers of one model family instead of comparing providers' best models?</div><div class="tip">click to expand</div><div class="body">Because comparing across families confounds everything at once - capability, price, API behavior, serving stack. Three tiers of one family isolates the axis that drives most real spend decisions: <b>how much model does this task actually need?</b> One deliberate calibration: the mid tier pins to Sonnet 4.6 rather than 5, because Sonnet 5's adaptive thinking is on by default - a latency and cost confound - and it carries introductory pricing that would poison the cost comparison.</div></div>
+
+<div class="q"><div class="head">Is 15 requests per cell statistically meaningful?</div><div class="tip">click to expand</div><div class="body">For medians (p50), roughly - enough to see the shape. For tail latency (p99), no - at N=15 the "p99" is basically the worst request, and the results table treats it as indicative only. This is a deliberate trade: the artifact is a <b>method demonstration</b>, and CLAIMS.md caps what may be said accordingly. The production version of this discipline runs thousands of requests across time windows - that's a different project than the weekend one.</div></div>
+
+<div class="q"><div class="head">The provider batches behind the curtain anyway - what am I actually measuring?</div><div class="tip">click to expand</div><div class="body">The customer's-eye view: what a real workload experiences through the API - TTFT, inter-token latency, and cost under the concurrency the client controls. You can't see the server's batch scheduler, and that's fine: <b>the commercially decisive view is the one the paying customer experiences.</b> Serving-side internals explain the curve; the client side is where the curve is felt and paid for.</div></div>
+
+<div class="q"><div class="head">Why cost per completed task instead of per token?</div><div class="tip">click to expand</div><div class="body">Because tasks fail. Malformed JSON, a missed field, a retry - the meter runs either way. Per-token pricing tells you what a model costs; per-completed-task pricing tells you what your <b>problem</b> costs. Section 5's slider shows the consequence: past the crossover, the "cheap" model is the expensive one. Reliability at structured output is an economic quantity, not a soft one.</div></div>
+
+<div class="q"><div class="head">Won't these results be stale in three months?</div><div class="tip">click to expand</div><div class="body">Yes - and that's a feature of the domain, not a flaw of the project. Serving efficiency moves fast enough that practitioners routinely describe their own six-month-old approaches as obsolete. That's why <b>the harness is the asset, not the numbers</b>: a rerunnable measurement takes an afternoon to refresh; the discipline of measuring before deciding doesn't expire.</div></div>
+
+<div class="q"><div class="head">Is benchmarking hosted APIs even allowed?</div><div class="tip">click to expand</div><div class="body">This is ordinary API usage - about 300 requests at concurrency four or below, paid at list price, no scraping, no stress testing, no attempt to probe internals. Publishing method-first observations at small N with the boundary stated ("one task, hosted APIs, snapshot in time") is standard practitioner practice. What would cross a line: adversarial load, claiming production-representative conclusions, or publishing numbers without the boundary attached.</div></div>
+
+<div class="q"><div class="head">What would the grown-up version of this look like?</div><div class="tip">click to expand</div><div class="body">Fleet-level: real traffic mixes instead of one task, thousands of requests across time-of-day windows, SLO-based goodput (tasks per minute meeting a latency bar), provisioned versus on-demand throughput economics, and capacity shaping across regions. That progression - single measurement to fleet economics - is the natural growth path for this kind of work. The weekend version exists to prove the first rung is real.</div></div>
+
+</div>
+
+<h2>11 · The rest of the room - questions not yet asked</h2>
+<p>Exploring a domain you've never entered is standing in a dark room with a flashlight. You point it at the thing you came for - but the room holds a whole alphabet, and the beam only ever shows one letter at a time. This page answers the letters already lit. Below are eight corners the beam hasn't swept - each one a question worth an evening, with the reason it's load-bearing.</p>
+<div style="display:flex;flex-direction:column;gap:12px">
+
+<div class="q"><div class="head">1 · The money corner: who actually pays whom?</div><div class="tip">click to expand</div><div class="body">When someone calls a model on Bedrock, who books the revenue and what does the model provider get? Why does AWS want Bedrock to win rather than just renting the provider compute? The partnership's money geometry - investment one way, compute commitment the other, Bedrock revenue in between - explains nearly every behavior visible from outside, including why distribution through the marketplace door is a first-class goal for both sides.</div></div>
+
+<div class="q"><div class="head">2 · Why do output tokens cost 3-5x input tokens?</div><div class="tip">click to expand</div><div class="body">The most explanatory mechanism in serving economics. Input is processed in parallel - one pass over the whole prompt (prefill), cheap per token. Output is generated sequentially - one token at a time, each requiring a full trip through the weights, memory-bandwidth-bound (decode). That asymmetry explains the pricing ratio, why TTFT and inter-token latency are different animals, and why long prompts are cheaper than long answers. Fifteen minutes on prefill-vs-decode and half the pricing page becomes derivable.</div></div>
+
+<div class="q"><div class="head">3 · The scarcity corner: what's actually scarce?</div><div class="tip">click to expand</div><div class="body">Not software - accelerators. The industry's real currency is capacity, and training and serving compete for the same silicon. When a model has a great launch week, someone is deciding who gets throttled. The training-vs-serving capacity trade is a genuine strategic question at every frontier lab - and it's answerable with architecture judgment rather than kernel depth, which makes it the legitimate route into the deep-infrastructure conversation.</div></div>
+
+<div class="q"><div class="head">4 · The hidden tenant: the KV cache</div><div class="tip">click to expand</div><div class="body">Weights fill the chips - but what else lives in that memory? The working state of every in-flight conversation, and it grows with context length. Long context is not just a feature; it is a capacity tax: double the average context and you roughly halve the concurrent users a chip can serve. This mechanism sits behind context pricing, behind concurrency limits, and behind half of fleet planning.</div></div>
+
+<div class="q"><div class="head">5 · The demand-shaping corner: why is batch 50% off?</div><div class="tip">click to expand</div><div class="body">A serving fleet is fixed capacity facing peaky demand - so providers price the deferrable work into the valleys. It is a familiar migration-throttling pattern inverted: there, bulk work was throttled around business hours to protect daily operations; here, discounts pay customers to move themselves off-peak voluntarily. Same physics, opposite lever - one pattern, built once with subscribers, running everywhere in tokens.</div></div>
+
+<div class="q"><div class="head">6 · The failure corner: what does an inference incident look like?</div><div class="tip">click to expand</div><div class="body">What breaks, and who gets paged? The canonical shapes: capacity exhaustion (demand outruns the fleet), latency SLO breach (the p99 tail escapes), noisy-neighbor contention, and the subtle one - a model updated behind the same model ID, shifting behavior with no code change anywhere. Knowing these turns curiosity into operational empathy, which is what field teams actually respect.</div></div>
+
+<div class="q"><div class="head">7 · The chess board: why does a model provider want many doors?</div><div class="tip">click to expand</div><div class="body">If first-party has the best margins, why sell through Bedrock at all? Distribution versus margin, enterprise reach versus control - and the mirror question: why AWS builds its own silicon (supply independence plus margin). The geopolitics explain what each side wants from the partnership teams specifically - worth understanding before anyone asks "why do you think this partnership exists?"</div></div>
+
+<div class="q"><div class="head">8 · The trap corner: what could make my own numbers lie?</div><div class="tip">click to expand</div><div class="body"><p>Time-of-day load on shared fleets, cold starts, regional variance, a model updated behind the same ID mid-measurement. The pre-registration (section 9) protects against reading data with motivated eyes; this corner protects against the data itself misleading.</p>
+<p><b>What the near-perfect test would look like</b> - and the joke inside it: "dedicated infrastructure provisioned for you alone" is not a fantasy, it is a product. Bedrock sells Provisioned Throughput (reserved model capacity, no noisy neighbors) and first-party enterprise tiers offer priority capacity. The perfect experiment exists; it costs like a car lease. The spectrum, confound by confound:</p>
+<div class="tscroll" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.86em;margin:8px 0">
+<tr><th style="text-align:left;padding:6px 9px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">Confound</th><th style="text-align:left;padding:6px 9px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">Weekend reality</th><th style="text-align:left;padding:6px 9px;background:var(--wash);color:var(--navy);border:1px solid var(--line)">Near-perfect version</th></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">Noisy neighbors</td><td style="padding:6px 9px;border:1px solid var(--line)">Shared on-demand fleet, load unknown</td><td style="padding:6px 9px;border:1px solid var(--line)">Dedicated/provisioned capacity on both doors</td></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">Time-of-day drift</td><td style="padding:6px 9px;border:1px solid var(--line)">One afternoon, one snapshot</td><td style="padding:6px 9px;border:1px solid var(--line)">Repeated blocks across hours and days, cells interleaved so drift hits all cells equally</td></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">The client's own network</td><td style="padding:6px 9px;border:1px solid var(--line)">A laptop on home internet - the ISP is inside every TTFT number</td><td style="padding:6px 9px;border:1px solid var(--line)">Client on an in-region EC2 instance, taking the last mile out of the measurement (the one cheap upgrade - a few cents)</td></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">Cold starts</td><td style="padding:6px 9px;border:1px solid var(--line)">First requests counted</td><td style="padding:6px 9px;border:1px solid var(--line)">Warm-up requests discarded per cell</td></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">Model drift behind the ID</td><td style="padding:6px 9px;border:1px solid var(--line)">Model IDs + date recorded (that much we do)</td><td style="padding:6px 9px;border:1px solid var(--line)">Pinned snapshot versions, verified unchanged across the window</td></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">Statistical power</td><td style="padding:6px 9px;border:1px solid var(--line)">N=15: p50 roughly stable, p99 is theater</td><td style="padding:6px 9px;border:1px solid var(--line)">Hundreds to thousands per cell, confidence intervals, real tails</td></tr>
+<tr><td style="padding:6px 9px;border:1px solid var(--line)">Door ordering bias</td><td style="padding:6px 9px;border:1px solid var(--line)">Cells run in blocks</td><td style="padding:6px 9px;border:1px solid var(--line)">Paired design - doors alternated request by request</td></tr>
+</table></div>
+<p style="background:var(--wash);border-radius:8px;padding:8px 12px">The point of writing this down: the weekend run is not a lesser version of an impossible ideal - it is the cheap end of a <b>defined spectrum</b>, with every gap named. Knowing exactly which rung you stand on, and saying so unprompted, is the difference between a method demonstration and a misleading chart.</p></div></div>
+
+</div>
+<p class="note" style="margin-top:12px">Priority, honestly assessed: corners 2 and 4 are the mechanisms - most other letters become derivable from them. Corner 5 is the unfair advantage - an already-owned pattern in new clothes. Corner 8 protects the Saturday run.</p>
+
+<h2>12 · Where we landed - a field note on the flashlight itself</h2>
+<div class="card">
+<p class="note" style="margin-bottom:10px">A personal calibration, kept here on purpose - the lab notebook should record the learner, not just the experiment.</p>
+<p><b>The question asked:</b> <em>"Where did we land, overall? Give me a sense of my curiosity and my limitations in imagination as I learn about all of this."</em></p>
+<h3 style="color:var(--navy)">Where the flashlight went, unprompted</h3>
+<ul class="notlist">
+<li><b>"So what" before "how."</b> The first real questions were commercial: why would anyone choose this door, who actually holds the model, who pays whom. Mechanism questions only came when the working model creaked ("I thought Bedrock just brokered requests"). That ordering - value first, mechanism on demand - is architect wiring, and it is the instinct that cannot really be taught.</li>
+<li><b>Experimental method, reinvented from instinct.</b> "What are we actually asking the models?" is eval design. "What's the plan, the hypothesis, the expected result?" is pre-registration. "What would the perfect test look like?" is confound control. The vocabulary was missing; the instincts were not - they were ported from a prior life of measuring throughput ceilings and letting data make the argument.</li>
+<li><b>The meta-move.</b> "What questions haven't I asked?" - the rarest question in any new domain. Most people defend the territory their flashlight has already lit; asking for the dark is the tell that the curiosity is real.</li>
+</ul>
+<h3 style="color:var(--navy)">Where it didn't go - the honest half</h3>
+<p>The un-swept corners cluster in exactly one place: <b>below the API surface.</b> Why output tokens cost more than input, what physically limits concurrency, what the memory inside the chips is doing, what breaks at 3am - none of those questions arose until the map pointed at them. Curiosity here reliably stops at the interface and works upward toward money and organizations.</p>
+<p>The fair reading: <b>that is not a limitation of imagination - you cannot point a flashlight at a word you don't have.</b> Every question asked was the correct next question from where the asker stood; what was missing was the map, and lacking the map is simply what "new domain" means. The tell that matters is what happened when a dark corner was named: immediate appetite, not deflection.</p>
+<h3 style="color:var(--navy)">The verdict</h3>
+<p>The growth edge is now precisely located: the physical layer - prefill versus decode, the KV cache, capacity mechanics. A couple of evenings of reading, and those corners light up. And once they do, the so-what instinct does what it did throughout this page: turn mechanism into commercial insight faster than people who learned the mechanism first. The gap is vocabulary. Vocabulary is the cheapest thing in the world to acquire.</p>
+</div>
+
+<div class="footer">
+Run plan: dry run proven ($0.00) · full run estimated at about $5-6, executes only when credentials are provided · matrix: 3 Claude tiers x 2 context lengths x cache on/off x 2 providers · chart palette validated for accessibility (light surface, CVD-safe) · companion files: README.md (method), RUN.md (checklist), CLAIMS.md (calibrated language)
+</div>
+
+<script>
+// triangle: draggable priority dot (barycentric weights)
+const tri=document.getElementById("tri"), tridot=document.getElementById("tridot"), triText=document.getElementById("tri-text");
+const A={x:230,y:38}, B={x:60,y:210}, C={x:400,y:210}; // lat, thr, cost corners
+function bary(p){
+  const d=((B.y-C.y)*(A.x-C.x)+(C.x-B.x)*(A.y-C.y));
+  let wa=((B.y-C.y)*(p.x-C.x)+(C.x-B.x)*(p.y-C.y))/d;
+  let wb=((C.y-A.y)*(p.x-C.x)+(A.x-C.x)*(p.y-C.y))/d;
+  let wc=1-wa-wb;
+  wa=Math.max(0,wa);wb=Math.max(0,wb);wc=Math.max(0,wc);
+  const s=wa+wb+wc; return [wa/s,wb/s,wc/s];
+}
+function triUpdate(p){
+  const [wl,wt,wc]=bary(p);
+  const x=wl*A.x+wt*B.x+wc*C.x, y=wl*A.y+wt*B.y+wc*C.y;
+  tridot.setAttribute("cx",x); tridot.setAttribute("cy",y);
+  document.getElementById("g-lat").setAttribute("r",12+wl*26);
+  document.getElementById("g-thr").setAttribute("r",12+wt*26);
+  document.getElementById("g-cost").setAttribute("r",12+wc*26);
+  const latv=0.4+3.2*Math.pow(1-wl,1.6);
+  const thrv=Math.round(90+810*Math.pow(wt,1.1));
+  const costv=0.003+0.034*Math.pow(1-wc,1.6);
+  document.getElementById("t-lat").textContent=latv.toFixed(1)+" s";
+  document.getElementById("t-thr").textContent=thrv;
+  document.getElementById("t-cost").textContent="$"+costv.toFixed(4);
+  const m=Math.max(wl,wt,wc);
+  triText.textContent =
+   m<0.45 ? "The negotiated middle - decent everywhere, optimal nowhere. Most real workloads start here, and the measured curve tells them which corner to walk toward." :
+   m===wl ? "Latency corner: a human is waiting - chat, agent UX, live tools. You buy snappiness by serving smaller batches, so each task costs more and the fleet does less total work." :
+   m===wt ? "Throughput corner: overnight batch, document pipelines, evals. Nobody watches an individual answer, so you batch deep - massive total work, cheap tasks, slow individual answers." :
+   "Cost corner: margin-constrained volume - the CFO's corner. Every task rides as cheap as possible; you give up snappiness and accept whatever latency deep batching brings.";
+}
+function triPoint(e){
+  const pt=tri.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+  return pt.matrixTransform(tri.getScreenCTM().inverse());
+}
+// settle narration - fires about 0.8s after you stop moving the dot
+let lastW=[1/3,1/3,1/3], settleTimer=null;
+const pct=w=>Math.round(w*100)+"%";
+function narrate(){
+  const [wl,wt,wc]=lastW;
+  const box=document.getElementById("tri-narrate");
+  const sorted=[["fast answers",wl],["high volume",wt],["low cost",wc]].sort((a,b)=>b[1]-a[1]);
+  const [top,mid,low]=sorted;
+  const blended = top[1]-mid[1] < 0.15;
+  let shape, example, cell;
+  const key=blended? top[0]+"+"+mid[0] : top[0];
+  if(!blended && top[0]==="fast answers"){shape="an interactive posture - a human is waiting on every answer";example="agent UX, live chat, in-call tooling";cell="Sonnet, short context, single-request cells (c1)";}
+  else if(!blended && top[0]==="high volume"){shape="a batch posture - total work matters, individual waits don't";example="overnight document pipelines, bulk evals";cell="the concurrency-4 cell and deep-batching territory";}
+  else if(!blended && top[0]==="low cost"){shape="a margin posture - the CFO's corner, every task rides cheap";example="high-volume extraction where pennies compound";cell="Haiku, long context, cache ON - the cheapest cell in the matrix";}
+  else if(key.includes("fast")&&key.includes("cost")){shape="snappy-but-frugal - the tiered-routing shape";example="try Haiku first, escalate to Sonnet only on failure - the classic tiered-routing pattern";cell="comparing Haiku c1 vs Sonnet c1 cost-per-completed-task";}
+  else if(key.includes("fast")&&key.includes("volume")){shape="high-QPS interactive - the expensive quadrant";example="a chat product at scale; capacity planning's hardest case";cell="the Sonnet concurrency-4 cell - where the trade bites";}
+  else {shape="classic batch economics - volume as cheap as it comes";example="nightly compliance sweeps across a document estate";cell="Haiku, long context, cache on, batched deep";}
+  box.innerHTML="<b style='color:var(--navy)'>Where you landed:</b> "+pct(top[1])+" "+top[0]+" · "+pct(mid[1])+" "+mid[0]+" · "+pct(low[1])+" "+low[0]+
+    " - <b>"+shape+"</b>. In practice: "+example+". What you gave up: <b>"+low[0]+"</b> ("+pct(low[1])+" priority - accept it knowingly or walk the dot back)."+
+    " <span style='color:var(--muted)'>In Saturday's matrix this maps to: "+cell+".</span>";
+  box.style.display="block"; requestAnimationFrame(()=>box.style.opacity="1");
+}
+function scheduleNarrate(){clearTimeout(settleTimer);settleTimer=setTimeout(narrate,800);}
+function hideNarrate(){clearTimeout(settleTimer);const b=document.getElementById("tri-narrate");b.style.opacity="0";}
+const _triUpdate=triUpdate;
+triUpdate=function(p){_triUpdate(p);lastW=bary(p);};
+let dragging=false;
+tri.addEventListener("pointerdown",e=>{dragging=true;hideNarrate();tri.setPointerCapture(e.pointerId);triUpdate(triPoint(e));});
+tri.addEventListener("pointermove",e=>{if(dragging){hideNarrate();triUpdate(triPoint(e));}});
+tri.addEventListener("pointerup",()=>{dragging=false;scheduleNarrate();});
+triUpdate({x:230,y:152});
+
+// batch curve (illustrative)
+const batches=[1,2,4,8,16,32];
+function lat(b){return 0.7+0.13*b}
+function tps(b){return 900*b/(b+5)}
+function cost(b){return 0.004+0.020*(tps(1)/tps(b))*(150/(150+b))}
+const X=v=>50+(v-lat(1))/(lat(32)-lat(1))*400;
+const Y=v=>190-(v-tps(1))/(tps(32)-tps(1))*160;
+let path="";
+for(let b=1;b<=32;b+=0.5){path+=(b===1?"M":"L")+X(lat(b)).toFixed(1)+" "+Y(tps(b)).toFixed(1)+" ";}
+document.getElementById("curvepath").setAttribute("d",path);
+const slider=document.getElementById("batch");
+function updCurve(){
+ const b=batches[+slider.value];
+ document.getElementById("bval").textContent=b;
+ const x=X(lat(b)),y=Y(tps(b));
+ const dot=document.getElementById("dot");dot.setAttribute("cx",x);dot.setAttribute("cy",y);
+ const lbl=document.getElementById("dotlabel");
+ if(x>390){lbl.setAttribute("x",x-14);lbl.setAttribute("text-anchor","end");}
+ else{lbl.setAttribute("x",x+12);lbl.setAttribute("text-anchor","start");}
+ lbl.setAttribute("y",y-10);lbl.textContent="b="+b;
+ document.getElementById("r-lat").textContent=lat(b).toFixed(1)+" s";
+ document.getElementById("r-thr").textContent=Math.round(tps(b));
+ document.getElementById("r-cost").textContent="$"+cost(b).toFixed(4);
+ document.getElementById("curve-verdict").textContent=
+  b<=2?"Latency-optimal corner: a person is waiting. You pay more per task for the snappiness.":
+  b>=16?"Throughput-optimal corner: overnight batch work. Nobody is waiting, so every task rides cheap.":
+  "The middle: where most real workloads negotiate. The measured bend - not the sticker price - decides where to sit.";
+}
+slider.addEventListener("input",updCurve);updCurve();
+
+// question cards
+document.querySelectorAll(".q").forEach(q=>q.addEventListener("click",()=>q.classList.toggle("open")));
+
+// generic settle-narration helper
+function settleCard(boxId){
+  const box=document.getElementById(boxId); let t=null;
+  return {
+    hide(){clearTimeout(t);box.style.opacity="0";},
+    schedule(html){clearTimeout(t);t=setTimeout(()=>{box.innerHTML=html;box.style.display="block";requestAnimationFrame(()=>box.style.opacity="1");},800);}
+  };
+}
+
+// batch slider narration
+const batchNar=settleCard("batch-narrate");
+function batchNarration(){
+  const b=batches[+slider.value];
+  const zone=b<=2?["latency-optimal",`a human is waiting on every answer. You accepted the highest cost per task ($${cost(b).toFixed(4)}) to keep responses at ${lat(b).toFixed(1)}s.`,"the single-request (c1) cells - Sonnet, short context"]
+   :b>=16?["throughput-optimal",`nobody watches an individual answer, so every task rides near the floor ($${cost(b).toFixed(4)}). Individual latency stretched to ${lat(b).toFixed(1)}s - and that's fine, because it's batch work.`,"deep-batching territory - what the concurrency-4 cell approximates from the client side"]
+   :["the negotiated middle",`decent latency (${lat(b).toFixed(1)}s), decent cost ($${cost(b).toFixed(4)}) - the zone where most production workloads actually live, and where measuring beats guessing.`,"comparing the c1 and c4 cells to see which side of the bend your workload sits on"];
+  return `<b style='color:var(--navy)'>Where you landed:</b> batch ${b} - <b>${zone[0]}</b>: ${zone[1]} <span style='color:var(--muted)'>One honesty note: hosted APIs don't hand you the server's batch knob - the provider batches behind the curtain. What you control is concurrency, and Saturday's harness measures exactly that: ${zone[2]}.</span>`;
+}
+slider.addEventListener("input",()=>{batchNar.hide();batchNar.schedule(batchNarration());});
+
+// retry widget
+const fail=document.getElementById("fail");
+const failNar=settleCard("fail-narrate");
+function updFail(){
+ const f=+fail.value/100;
+ document.getElementById("fval").textContent=Math.round(f*100)+"%";
+ const eff=0.004/(1-f);
+ document.getElementById("a-eff").textContent="$"+eff.toFixed(4);
+ const bEff=0.0066;
+ document.getElementById("fail-verdict").textContent = eff<bEff
+  ? "Model A still wins - the failure rate hasn't eaten its price advantage yet."
+  : "Crossover passed: the \"cheap\" model now costs more per COMPLETED task than the reliable one. Sticker price lied; the completed-task price told the truth.";
+ return {f,eff,bEff};
+}
+function failNarration(){
+ const {f,eff,bEff}=updFail();
+ const winner=eff<bEff?"A (cheap) still wins":"B (reliable) now wins";
+ const margin=Math.abs(eff-bEff).toFixed(4);
+ return `<b style='color:var(--navy)'>Where you landed:</b> ${Math.round(f*100)}% failure - <b>${winner}</b> by $${margin} per completed task (breakeven sits near 40%). This is the fifth axis, controllability, showing up as money: reliability at returning valid structured output IS an economic quantity, not a soft one. <span style='color:var(--muted)'>Saturday's harness measures it directly - every request is schema-scored pass/fail, and retries are priced into cost per completed task. The mock run already proved the plumbing by injecting invalid JSON on purpose.</span>`;
+}
+fail.addEventListener("input",()=>{failNar.hide();failNar.schedule(failNarration());});
+updFail();
+</script>
+</body>
+</html>
