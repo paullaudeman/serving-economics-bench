@@ -203,25 +203,67 @@ def write_chart(cells: list[dict], any_mock: bool) -> None:
         xr = (max(all_x) - min(all_x)) or 1.0
         yr = (max(all_y) - min(all_y)) or 1.0
         ax.margins(x=0.12, y=0.06)  # headroom so edge labels stay inside
-        placed: list[tuple[float, float]] = []
-        stagger = [(7, 5), (7, -13), (7, 16), (7, -24), (7, 27)]
+        # Two-pass label layout (26 Jul): place labels, measure their real
+        # rendered bounding boxes, push overlapping pairs apart vertically,
+        # then draw leader lines for any label that settles far from its
+        # point. Replaces the proximity-count stagger, which collided in
+        # dense clusters because it never measured label width.
+        fig = ax.figure
+        annos = []
         for c, x, y in sorted(plotted, key=lambda t: (t[1], -t[2])):
             cost = c["cost_per_completed_task"]
             cost_txt = f"  ${cost:,.4f}/task" if cost is not None else "  $ n/a"
-            # "Near" accounts for label width: a rendered label spans roughly
-            # a quarter of the x range at this figure size, so any placed
-            # point within that band and about one text row vertically forces this
-            # label onto the next stagger slot.
-            near = sum(1 for px, py in placed
-                       if abs(px - x) < 0.25 * xr and abs(py - y) < 0.055 * yr)
-            dx, dy = stagger[min(near, len(stagger) - 1)]
             right_edge = x > max(all_x) - 0.18 * xr
-            ax.annotate(label_for(c) + cost_txt, (x, y),
-                        textcoords="offset points",
-                        xytext=(-dx, dy) if right_edge else (dx, dy),
-                        ha="right" if right_edge else "left",
-                        fontsize=7.5, color=INK_2, zorder=4)
-            placed.append((x, y))
+            a = ax.annotate(label_for(c) + cost_txt, (x, y),
+                            textcoords="offset points",
+                            xytext=(-8, 5) if right_edge else (8, 5),
+                            ha="right" if right_edge else "left",
+                            fontsize=7.5, color=INK_2, zorder=4)
+            annos.append((a, x, y))
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        px_to_pt = 72.0 / fig.dpi
+        for _ in range(80):
+            moved = False
+            boxes = [a.get_window_extent(renderer) for a, _, _ in annos]
+            for i in range(len(annos)):
+                for j in range(i + 1, len(annos)):
+                    bi, bj = boxes[i], boxes[j]
+                    if bi.overlaps(bj):
+                        push_px = (min(bi.y1, bj.y1) - max(bi.y0, bj.y0)) / 2 + 3
+                        lo, hi = (i, j) if bi.y0 <= bj.y0 else (j, i)
+                        for k, sign in ((lo, -1), (hi, +1)):
+                            a = annos[k][0]
+                            ox, oy = a.xyann
+                            a.xyann = (ox, oy + sign * push_px * px_to_pt)
+                        moved = True
+                        boxes = [a.get_window_extent(renderer) for a, _, _ in annos]
+            # labels must also clear every data point, not just each other
+            pt_px = [ax.transData.transform((x, y)) for _, x, y in annos]
+            boxes = [a.get_window_extent(renderer) for a, _, _ in annos]
+            for i, (a, _, _) in enumerate(annos):
+                bb = boxes[i]
+                for j, (cx, cy) in enumerate(pt_px):
+                    if j == i:
+                        continue
+                    if (bb.x0 - 8 < cx < bb.x1 + 8) and (bb.y0 - 8 < cy < bb.y1 + 8):
+                        sign = 1 if bb.y0 + bb.height / 2 >= cy else -1
+                        push_px = (bb.y1 - cy + 10) if sign == 1 else (cy - bb.y0 + 10)
+                        ox, oy = a.xyann
+                        a.xyann = (ox, oy + sign * push_px * px_to_pt)
+                        moved = True
+            if not moved:
+                break
+        inv = ax.transData.inverted()
+        for a, x, y in annos:
+            _, oy = a.xyann
+            if abs(oy) > 16:
+                bb = a.get_window_extent(renderer)
+                pxy = ax.transData.transform((x, y))
+                ex = min(max(pxy[0], bb.x0), bb.x1)
+                ey = bb.y0 if pxy[1] < bb.y0 else (bb.y1 if pxy[1] > bb.y1 else pxy[1])
+                lx, ly = inv.transform((ex, ey))
+                ax.plot([x, lx], [y, ly], color=GRID, linewidth=0.7, zorder=3)
 
     ax.set_xlabel("TTFT p50 (seconds) - lower is better", color=INK_2, fontsize=10)
     ax.set_ylabel("Output tokens / second - higher is better", color=INK_2, fontsize=10)
