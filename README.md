@@ -75,6 +75,8 @@ carries: what do you gain and give up at each deployment tier?
 
 ## The matrix
 
+**Models are frozen as of 9. Oct 2026** as a fixed benchmark point. See [MODELS-FROZEN.md](MODELS-FROZEN.md).
+
 | Axis | Values |
 |---|---|
 | Provider | Anthropic first-party Messages API · Amazon Bedrock ConverseStream |

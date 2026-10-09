@@ -73,6 +73,7 @@ MAX_THROTTLE_RETRIES = 5
 # deliberately: Sonnet 5 runs adaptive thinking by default (a confound for a
 # serving benchmark) and carries introductory pricing; Sonnet 4.6 runs
 # thinking-off when the field is omitted, like Haiku 4.5 and Opus 4.8.
+# FROZEN 9. Oct 2026: these IDs are a fixed benchmark point. Do not bump them; see MODELS-FROZEN.md.
 MODELS = {
     "haiku": {
         "anthropic": "claude-haiku-4-5",
